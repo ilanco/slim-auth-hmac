@@ -1,0 +1,28 @@
+{
+    "name": "ilanco/slim-auth-hmac",
+    "license": "MIT",
+    "type": "library",
+    "description": "HMAC Auth Middleware for the Slim PHP Framework",
+    "keywords": ["auth", "http auth", "hmac", "slim", "middleware"],
+    "homepage": "https://github.com/ilanco/slim-auth-hmac",
+    "authors": [
+        {
+            "name": "Ilan Cohen",
+            "email": "ilanco@gmail.com",
+            "homepage": "https://ilanco.github.io/"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "slim/slim": "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "IC\\": "src/",
+            "Test\\": "tests/"
+        }
+    }
+}
