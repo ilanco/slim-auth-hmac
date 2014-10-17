@@ -1,14 +1,33 @@
 <?php
 
+/**
+ * This file is part of the SlimAuthHmac package.
+ *
+ * (c) Ilan Cohen <ilanco@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace IC\SlimAuthHmac\Middleware\Auth;
 
 use IC\SlimAuthHmac\Auth\HmacManager;
 
+/**
+ * HMAC Middleware
+ *
+ * @author Ilan Cohen <ilanco@gmail.com>
+ */
 class Hmac extends \Slim\Middleware
 {
     private $hmacManager = null;
 
-    public function __construct(array $hashes, array $options = array())
+    /**
+     * Constructor.
+     *
+     * @param string $options List of options
+     */
+    public function __construct(array $options = array())
     {
         $this->hmacManager = new HmacManager();
     }

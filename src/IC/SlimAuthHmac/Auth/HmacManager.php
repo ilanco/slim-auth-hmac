@@ -1,7 +1,21 @@
 <?php
 
+/**
+ * This file is part of the SlimAuthHmac package.
+ *
+ * (c) Ilan Cohen <ilanco@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace IC\SlimAuthHmac\Auth;
 
+/**
+ * HMAC Manager computes the HMAC and validates the payload.
+ *
+ * @author Ilan Cohen <ilanco@gmail.com>
+ */
 class HmacManager
 {
     const DEFAULT_ALGORITHM = 'sha256';
@@ -20,27 +34,53 @@ class HmacManager
 
     private $payload;
 
+    /**
+     * Constructor.
+     *
+     * @param string $algorithm  The algorithm used to compute the HMAC
+     * @param string $privateKey The private key
+     */
     public function __construct($algorithm = self::DEFAULT_ALGORITHM, $privateKey = null)
     {
         $this->setAlgorithm($algorithm);
         $this->setPrivateKey($privateKey);
     }
 
+    /**
+     * Sets the algorithm.
+     *
+     * @param string $algorithm The algorithm used to compute the HMAC
+     */
     public function setAlgorithm($algorithm)
     {
         $this->algorithm = $algorithm;
     }
 
+    /**
+     * Gets the algorithm.
+     *
+     * @return string $algorithm The algorithm used to compute the HMAC
+     */
     public function getAlgorithm()
     {
         return $this->algorithm;
     }
 
+    /**
+     * Sets the public key.
+     *
+     * @param string $publicKey The public key to identify the client
+     */
     public function setPublicKey($publicKey)
     {
         $this->publicKey = $publicKey;
     }
 
+    /**
+     * Gets the public key.
+     *
+     * @return string $publicKey The public key to identify the client
+     */
     public function getPublicKey()
     {
         return $this->publicKey;
