@@ -34,13 +34,15 @@ class Hmac extends \Slim\Middleware
 
     public function call()
     {
-        $this->checkRequest();
-
-        $this->next->call();
+        if ($this->checkRequest()) {
+            $this->next->call();
+        }
     }
 
     private function checkRequest()
     {
+        $isValid = false;
+
         $app = $this->app;
 
         $headers = $app->request->headers();
@@ -49,18 +51,14 @@ class Hmac extends \Slim\Middleware
         $authString = $headers->get('authentication');
 
         if (strpos($authString, 'hmac ') !== 0) {
-            $app->hook('slim.after.router', function () use ($app) {
-                $app->halt(403);
-            });
+            $app->response()->setStatus(403);
         }
         else {
             $authString = substr($authString, 5);
             $authArray = explode(':', $authString);
 
             if (count($authArray) !== 2) {
-                $app->hook('slim.after.router', function () use ($app) {
-                    $app->halt(403);
-                });
+                $app->response()->setStatus(403);
             }
             else {
                 list($publicKey, $hmacHash) = $authArray;
@@ -77,11 +75,11 @@ class Hmac extends \Slim\Middleware
                 $isValid = $this->hmacManager->isValid($this->hmacManager->generateHmac(), $hmacHash);
 
                 if ($isValid !== true) {
-                    $app->hook('slim.after.router', function () use ($app) {
-                        $app->halt(403);
-                    });
+                    $app->response()->setStatus(403);
                 }
             }
         }
+
+        return $isValid;
     }
 }
