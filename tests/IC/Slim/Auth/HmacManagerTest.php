@@ -1,8 +1,8 @@
 <?php
 
-namespace Test\IC\Slim\Auth;
+namespace Test\IC\SlimAuthHmac\Auth;
 
-use IC\Slim\Auth\HmacManager;
+use IC\SlimAuthHmac\Auth\HmacManager;
 
 class HmacManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,6 +14,6 @@ class HmacManagerTest extends \PHPUnit_Framework_TestCase
     {
         $hmacManager = new HmacManager();
 
-        $this->assertInstanceOf('IC\\Slim\\Auth\\HmacManager', $hmacManager);
+        $this->assertInstanceOf('IC\\SlimAuthHmac\\Auth\\HmacManager', $hmacManager);
     }
 }

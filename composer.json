@@ -21,8 +21,8 @@
     },
     "autoload": {
         "psr-0": {
-            "IC\\": "src/",
-            "Test\\": "tests/"
+            "IC\\SlimAuthHmac\\": "src/",
+            "IC\\SlimAuthHmac\\Test\\": "tests/"
         }
     }
 }

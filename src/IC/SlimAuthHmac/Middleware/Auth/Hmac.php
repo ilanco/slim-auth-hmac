@@ -1,8 +1,8 @@
 <?php
 
-namespace IC\Slim\Middleware\Auth;
+namespace IC\SlimAuthHmac\Middleware\Auth;
 
-use IC\Animaly\Auth\HmacManager;
+use IC\SlimAuthHmac\Auth\HmacManager;
 
 class Hmac extends \Slim\Middleware
 {

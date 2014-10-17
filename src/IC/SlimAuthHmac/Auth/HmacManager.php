@@ -1,6 +1,6 @@
 <?php
 
-namespace IC\Slim\Auth;
+namespace IC\SlimAuthHmac\Auth;
 
 class HmacManager
 {
