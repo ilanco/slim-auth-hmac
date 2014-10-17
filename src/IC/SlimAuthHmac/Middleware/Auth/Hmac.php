@@ -37,8 +37,6 @@ class Hmac extends \Slim\Middleware
         $this->checkRequest();
 
         $this->next->call();
-
-        $this->setResonse();
     }
 
     private function checkRequest()
@@ -48,7 +46,6 @@ class Hmac extends \Slim\Middleware
         $headers = $app->request->headers();
 
         // get api key and hash from headers
-        // $this->parseAuthHeader($headers->get('authentication'));
         $authString = $headers->get('authentication');
 
         if (strpos($authString, 'hmac ') !== 0) {
@@ -86,12 +83,5 @@ class Hmac extends \Slim\Middleware
                 }
             }
         }
-    }
-
-    private function setResonse()
-    {
-        $app = $this->app;
-
-        $headers = $app->request->headers();
     }
 }
