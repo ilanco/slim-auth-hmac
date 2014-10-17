@@ -9,13 +9,13 @@ A Slim middleware library that authenticates the request with HMAC.
 Requirements
 ------------
 
-PHP 5.4.
-Slim Framework 2.
+* PHP 5.4
+* Slim Framework 2
 
 Installation
 ------------
 
-composer
+Add ilanco/slim-auth-hmac to composer.json and run composer install.
 
 Documentation
 -------------
