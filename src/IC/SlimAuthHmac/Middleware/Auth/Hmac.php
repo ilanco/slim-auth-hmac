@@ -67,7 +67,12 @@ class Hmac extends \Slim\Middleware
                     $payload = '';
                     $payload .= $app->request->getMethod() . "\n";
                     $payload .= $app->request->getResourceUri() . "\n";
-                    $payload .= is_array($app->request()->getBody()) ? json_encode($app->request()->getBody()) : $app->request()->getBody();
+
+                    $body = $app->request()->getBody();
+                    if (is_string($body)) {
+                        $body = @json_decode($body);
+                    }
+                    $payload .= json_encode($body);
                     $this->hmacManager->setPayload($payload);
 
                     $hmacValue = $this->hmacManager->generateHmac();
