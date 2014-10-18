@@ -20,6 +20,8 @@ class HmacManager
 {
     const DEFAULT_ALGORITHM = 'sha256';
 
+    private $options;
+
     private $algorithm;
 
     private $publicKey;
@@ -37,13 +39,19 @@ class HmacManager
     /**
      * Constructor.
      *
-     * @param string $algorithm  The algorithm used to compute the HMAC
-     * @param string $privateKey The private key
+     * @param array $options List of options
      */
-    public function __construct($algorithm = self::DEFAULT_ALGORITHM, $privateKey = null)
+    public function __construct(array $options = array())
     {
-        $this->setAlgorithm($algorithm);
-        $this->setPrivateKey($privateKey);
+        $defaults = array(
+            'algorithm' => self::DEFAULT_ALGORITHM,
+            'privateKey' => null
+        );
+
+        $this->options = array_merge($defaults, $options);
+
+        $this->setAlgorithm($this->options['algorithm']);
+        $this->setPrivateKey($this->options['privateKey']);
     }
 
     /**

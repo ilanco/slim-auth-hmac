@@ -12,6 +12,7 @@
 namespace IC\SlimAuthHmac\Middleware\Auth;
 
 use IC\SlimAuthHmac\Auth\HmacManager;
+use IC\SlimAuthHmac\Exception\HttpForbiddenException;
 
 /**
  * HMAC Middleware
@@ -29,57 +30,58 @@ class Hmac extends \Slim\Middleware
      */
     public function __construct(array $options = array())
     {
-        $this->hmacManager = new HmacManager();
+        $defaults = array(
+            'algorithm' => 'sha256',
+            'privateKey' => null
+        );
+
+        $this->hmacManager = new HmacManager(array_merge($defaults, $options));
     }
 
     public function call()
     {
-        if ($this->checkRequest()) {
-            $this->next->call();
-        }
-    }
-
-    private function checkRequest()
-    {
-        $isValid = false;
-
         $app = $this->app;
+        $hmacManager = $this->hmacManager;
 
-        $headers = $app->request->headers();
+        $checkRequest = function () use ($app, $hmacManager) {
+            $headers = $app->request->headers();
 
-        // get api key and hash from headers
-        $authString = $headers->get('authentication');
+            // get api key and hash from headers
+            $authString = $headers->get('authentication');
 
-        if (strpos($authString, 'hmac ') !== 0) {
-            $app->response()->setStatus(403);
-        }
-        else {
-            $authString = substr($authString, 5);
-            $authArray = explode(':', $authString);
-
-            if (count($authArray) !== 2) {
-                $app->response()->setStatus(403);
+            if (strpos($authString, 'hmac ') !== 0) {
+                throw new HttpForbiddenException();
             }
             else {
-                list($publicKey, $hmacHash) = $authArray;
+                $authString = substr($authString, 5);
+                $authArray = explode(':', $authString);
 
-                $this->hmacManager->setPublicKey($publicKey);
-                $this->hmacManager->setHmacHash($hmacHash);
-                $payload = '';
-                $payload .= $app->request->getMethod() . "\n";
-                $payload .= $app->request->getResourceUri() . "\n";
-                $payload .= $app->request()->getBody();
-                $this->hmacManager->setPayload($payload);
+                if (count($authArray) !== 2) {
+                    throw new HttpForbiddenException();
+                }
+                else {
+                    list($publicKey, $hmacHash) = $authArray;
 
-                $hmacValue = $this->hmacManager->generateHmac();
-                $isValid = $this->hmacManager->isValid($this->hmacManager->generateHmac(), $hmacHash);
+                    $this->hmacManager->setPublicKey($publicKey);
+                    $this->hmacManager->setHmacHash($hmacHash);
+                    $payload = '';
+                    $payload .= $app->request->getMethod() . "\n";
+                    $payload .= $app->request->getResourceUri() . "\n";
+                    $payload .= json_encode($app->request()->getBody());
+                    $this->hmacManager->setPayload($payload);
 
-                if ($isValid !== true) {
-                    $app->response()->setStatus(403);
+                    $hmacValue = $this->hmacManager->generateHmac();
+                    $isValid = $this->hmacManager->isValid($this->hmacManager->generateHmac(), $hmacHash);
+
+                    if ($isValid !== true) {
+                        throw new HttpForbiddenException();
+                    }
                 }
             }
-        }
+        };
 
-        return $isValid;
+        $this->app->hook('slim.before.dispatch', $checkRequest);
+
+        $this->next->call();
     }
 }
