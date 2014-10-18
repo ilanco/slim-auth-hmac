@@ -50,8 +50,13 @@ class HmacManager
 
         $this->options = array_merge($defaults, $options);
 
-        $this->setAlgorithm($this->options['algorithm']);
-        $this->setPrivateKey($this->options['privateKey']);
+        if (!empty($this->options['algorithm'])) {
+            $this->setAlgorithm($this->options['algorithm']);
+        }
+
+        if (!empty($this->options['privateKey'])) {
+            $this->setPrivateKey($this->options['privateKey']);
+        }
     }
 
     /**
@@ -94,11 +99,25 @@ class HmacManager
         return $this->publicKey;
     }
 
+    /**
+     * Sets the private key.
+     *
+     * @param string $privateKey The private key to hash the message with
+     */
     public function setPrivateKey($privateKey)
     {
+        if (empty($privateKey)) {
+            throw new \RuntimeException('Private key must be set and not empty');
+        }
+
         $this->privateKey = $privateKey;
     }
 
+    /**
+     * Gets the private key.
+     *
+     * @return string $privateKey The private key
+     */
     public function getPrivateKey()
     {
         return $this->privateKey;
@@ -146,6 +165,12 @@ class HmacManager
 
     public function generateHmac()
     {
+        if (empty($this->getAlgorithm())) {
+            throw new \RuntimeException('Algorithm must be set and not empty');
+        } elseif (empty($this->getPrivateKey())) {
+            throw new \RuntimeException('Private key must be set and not empty');
+        }
+
         $hash = hash_hmac($this->getAlgorithm(), $this->getPayload(), $this->getPrivateKey(), false);
 
         return $hash;
