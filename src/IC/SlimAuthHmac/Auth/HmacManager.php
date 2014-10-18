@@ -138,7 +138,7 @@ class HmacManager
 
     public function generateHmac()
     {
-        $hash = hash_hmac($this->algorithm, $this->payload, $this->privateKey, false);
+        $hash = hash_hmac($this->getAlgorithm(), $this->getPayload(), $this->getPrivateKey(), false);
 
         return $hash;
     }
