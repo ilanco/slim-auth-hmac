@@ -13,6 +13,7 @@ namespace IC\SlimAuthHmac\Middleware\Auth;
 
 use IC\SlimAuthHmac\Auth\HmacManager;
 use IC\SlimAuthHmac\Exception\HttpForbiddenException;
+use IC\SlimAuthHmac\Utils;
 
 /**
  * HMAC Middleware
@@ -69,34 +70,25 @@ class Hmac extends \Slim\Middleware
                 $this->hmacManager->setRequestMethod($app->request->getMethod());
                 $this->hmacManager->setRequestResourceUri($app->request->getResourceUri());
 
-                var_dump($app->environment['slim.input_original']);
-                var_dump($app->environment['slim.input']);
                 $requestBody = $app->request()->getBody();
-                if (is_string($requestBody)) {
-                    $requestBody = @json_decode($requestBody);
+                if (Utils::isJson($requestBody)) {
+                    $requestBody = json_decode($requestBody);
                 }
                 $this->hmacManager->setRequestBody(json_encode($requestBody));
 
                 $payload = '';
-                $payload .= $app->request->getMethod() . "\n";
-                $payload .= $app->request->getResourceUri() . "\n";
+                $payload .= $this->hmacManager->getRequestMethod() . "\n";
+                $payload .= $this->hmacManager->getRequestResourceUri() . "\n";
+                $payload .= $this->hmacManager->getRequestBody();
+                $this->hmacManager->setPayload($payload);
 
-                $body = $app->request()->getBody();
-                if (is_string($body)) {
-                    $body = @json_decode($body);
-                }
-                    $payload .= json_encode($body);
-                    $this->hmacManager->setPayload($payload);
+                $hmacValue = $this->hmacManager->generateHmac();
+                $isValid = $this->hmacManager->isValid($this->hmacManager->generateHmac(), $hmacSignature);
 
-                    $hmacValue = $this->hmacManager->generateHmac();
-                    $isValid = $this->hmacManager->isValid($this->hmacManager->generateHmac(), $hmacHash);
-
-                    if ($isValid !== true) {
-                        throw new HttpForbiddenException();
-                    }
+                if ($isValid !== true) {
+                    throw new HttpForbiddenException();
                 }
             }
-        var_dump($authHeader);
-        die();
+        }
     }
 }

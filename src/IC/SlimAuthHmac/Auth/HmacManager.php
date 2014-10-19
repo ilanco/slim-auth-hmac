@@ -34,6 +34,12 @@ class HmacManager
 
     private $hmacHash;
 
+    private $requestMethod;
+
+    private $requestResourceUri;
+
+    private $requestBody;
+
     private $payload;
 
     /**
@@ -171,6 +177,16 @@ class HmacManager
     public function getRequestResourceUri()
     {
         return $this->requestResourceUri;
+    }
+
+    public function setRequestBody($requestBody)
+    {
+        $this->requestBody = $requestBody;
+    }
+
+    public function getRequestBody()
+    {
+        return $this->requestBody;
     }
 
     public function setPayload($payload)

@@ -2,6 +2,7 @@
 
 namespace Test\IC\SlimAuthHmac\Middleware\Auth;
 
+use Slim\Middleware\ContentTypes;
 use IC\SlimAuthHmac\Middleware\Auth\Hmac;
 use IC\SlimAuthHmac\Auth\HmacManager;
 
@@ -39,6 +40,7 @@ class HmacTest extends \PHPUnit_Framework_TestCase
     {
         ob_start();
 
+        // $this->app->add(new ContentTypes());
         $this->app->add(new Hmac(array(
             'privateKey' => $this->privateKey
         )));
