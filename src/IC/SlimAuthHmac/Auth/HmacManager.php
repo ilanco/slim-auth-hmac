@@ -153,6 +153,26 @@ class HmacManager
         return $this->hmacHash;
     }
 
+    public function setRequestMethod($requestMethod)
+    {
+        $this->requestMethod = $requestMethod;
+    }
+
+    public function getRequestMethod()
+    {
+        return $this->requestMethod;
+    }
+
+    public function setRequestResourceUri($requestResourceUri)
+    {
+        $this->requestResourceUri = $requestResourceUri;
+    }
+
+    public function getRequestResourceUri()
+    {
+        return $this->requestResourceUri;
+    }
+
     public function setPayload($payload)
     {
         $this->payload = $payload;

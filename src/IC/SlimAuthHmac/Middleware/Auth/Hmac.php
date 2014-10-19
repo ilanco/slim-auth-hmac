@@ -40,38 +40,51 @@ class Hmac extends \Slim\Middleware
 
     public function call()
     {
+        $this->app->hook('slim.before.dispatch', array($this, 'checkRequest'));
+
+        $this->next->call();
+    }
+
+    public function checkRequest()
+    {
         $app = $this->app;
-        $hmacManager = $this->hmacManager;
 
-        $checkRequest = function () use ($app, $hmacManager) {
-            $headers = $app->request->headers();
+        $authHeader = $app->request->headers()->get('authentication');
 
-            // get api key and hash from headers
-            $authString = $headers->get('authentication');
+        if (strpos(strtoupper($authHeader), 'HMAC ') !== 0) {
+            throw new HttpForbiddenException();
+        }
+        else {
+            $authKeySig = substr($authHeader, 5);
 
-            if (strpos($authString, 'hmac ') !== 0) {
+            if (count(explode(':', $authKeySig)) !== 2) {
                 throw new HttpForbiddenException();
             }
             else {
-                $authString = substr($authString, 5);
-                $authArray = explode(':', $authString);
+                list($publicKey, $hmacSignature) = explode(':', $authKeySig);
 
-                if (count($authArray) !== 2) {
-                    throw new HttpForbiddenException();
+                $this->hmacManager->setPublicKey($publicKey);
+                $this->hmacManager->setHmacHash($hmacSignature);
+
+                $this->hmacManager->setRequestMethod($app->request->getMethod());
+                $this->hmacManager->setRequestResourceUri($app->request->getResourceUri());
+
+                var_dump($app->environment['slim.input_original']);
+                var_dump($app->environment['slim.input']);
+                $requestBody = $app->request()->getBody();
+                if (is_string($requestBody)) {
+                    $requestBody = @json_decode($requestBody);
                 }
-                else {
-                    list($publicKey, $hmacHash) = $authArray;
+                $this->hmacManager->setRequestBody(json_encode($requestBody));
 
-                    $this->hmacManager->setPublicKey($publicKey);
-                    $this->hmacManager->setHmacHash($hmacHash);
-                    $payload = '';
-                    $payload .= $app->request->getMethod() . "\n";
-                    $payload .= $app->request->getResourceUri() . "\n";
+                $payload = '';
+                $payload .= $app->request->getMethod() . "\n";
+                $payload .= $app->request->getResourceUri() . "\n";
 
-                    $body = $app->request()->getBody();
-                    if (is_string($body)) {
-                        $body = @json_decode($body);
-                    }
+                $body = $app->request()->getBody();
+                if (is_string($body)) {
+                    $body = @json_decode($body);
+                }
                     $payload .= json_encode($body);
                     $this->hmacManager->setPayload($payload);
 
@@ -83,10 +96,7 @@ class Hmac extends \Slim\Middleware
                     }
                 }
             }
-        };
-
-        $this->app->hook('slim.before.dispatch', $checkRequest);
-
-        $this->next->call();
+        var_dump($authHeader);
+        die();
     }
 }
