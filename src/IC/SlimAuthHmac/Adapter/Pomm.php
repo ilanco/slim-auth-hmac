@@ -14,7 +14,7 @@ class Pomm extends AbstractAdapter
 {
     protected $connection = null;
 
-    public function __construct(\Pomm\Connection\Connection $connection)
+    public function __construct(\Pomm\Connection\Connection $connection, $tableName, $identityColumn, $credentialColumn)
     {
         $this->connection = $connection;
     }

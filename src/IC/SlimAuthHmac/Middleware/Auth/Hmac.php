@@ -12,6 +12,7 @@
 namespace IC\SlimAuthHmac\Middleware\Auth;
 
 use IC\SlimAuthHmac\Auth\HmacManager;
+use IC\SlimAuthHmac\Adapter\AbstractAdapter;
 use IC\SlimAuthHmac\Exception\HttpForbiddenException;
 use IC\SlimAuthHmac\Utils;
 
@@ -22,21 +23,20 @@ use IC\SlimAuthHmac\Utils;
  */
 class Hmac extends \Slim\Middleware
 {
-    private $hmacManager = null;
+    private $hmacManager;
+
+    private $adapter;
 
     /**
      * Constructor.
      *
      * @param string $options List of options
      */
-    public function __construct(array $options = array())
+    public function __construct(HmacManager $hmacManager, AbstractAdapter $adapter, array $options = array())
     {
-        $defaults = array(
-            'algorithm' => 'sha256',
-            'privateKey' => null
-        );
+        $this->hmacManager = $hmacManager;
 
-        $this->hmacManager = new HmacManager(array_merge($defaults, $options));
+        $this->adapter = $adapter;
     }
 
     public function call()
