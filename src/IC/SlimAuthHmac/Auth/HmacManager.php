@@ -11,6 +11,8 @@
 
 namespace IC\SlimAuthHmac\Auth;
 
+use IC\SlimAuthHmac\Adapter;
+
 /**
  * HMAC Manager computes the HMAC and validates the payload.
  *
@@ -19,6 +21,13 @@ namespace IC\SlimAuthHmac\Auth;
 class HmacManager
 {
     const DEFAULT_ALGORITHM = 'sha256';
+
+    /**
+     * Authentication adapter
+     *
+     * @var Adapter\AdapterInterface
+     */
+    protected $adapter = null;
 
     private $options;
 
@@ -47,8 +56,12 @@ class HmacManager
      *
      * @param array $options List of options
      */
-    public function __construct(array $options = array())
+    public function __construct(Adapter\AdapterInterface $adapter = null, array $options = array())
     {
+        if ($adapter !== null) {
+            $this->setAdapter($adapter);
+        }
+
         $defaults = array(
             'algorithm' => self::DEFAULT_ALGORITHM,
             'privateKey' => null
@@ -63,6 +76,31 @@ class HmacManager
         if (!empty($this->options['privateKey'])) {
             $this->setPrivateKey($this->options['privateKey']);
         }
+    }
+
+    /**
+     * Returns the authentication adapter
+     *
+     * The adapter does not have a default if the storage adapter has not been set.
+     *
+     * @return Adapter\AdapterInterface|null
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
+
+    /**
+     * Sets the authentication adapter
+     *
+     * @param  Adapter\AdapterInterface $adapter
+     * @return HmacManager Provides a fluent interface
+     */
+    public function setAdapter(Adapter\AdapterInterface $adapter)
+    {
+        $this->adapter = $adapter;
+
+        return $this;
     }
 
     /**

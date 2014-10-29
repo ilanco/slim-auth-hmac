@@ -10,7 +10,7 @@
 
 namespace IC\SlimAuthHmac\Adapter;
 
-class Pomm extends AbstractAdapter
+class PommAdapter extends AbstractAdapter
 {
     protected $connection = null;
 

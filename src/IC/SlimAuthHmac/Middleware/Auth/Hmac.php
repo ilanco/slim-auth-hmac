@@ -27,6 +27,8 @@ class Hmac extends \Slim\Middleware
 
     private $adapter;
 
+    private $options;
+
     /**
      * Constructor.
      *
@@ -37,11 +39,23 @@ class Hmac extends \Slim\Middleware
         $this->hmacManager = $hmacManager;
 
         $this->adapter = $adapter;
+
+        $this->options = array_merge(array(
+            'allowedRoutes' => array(),
+            'header' => array(
+                'authentication' => 'Authentication'
+            )
+        ), $options);
     }
 
     public function call()
     {
-        $this->app->hook('slim.before.dispatch', array($this, 'checkRequest'));
+        $request = $this->app->request();
+        $route = $request->getMethod() . $request->getResourceUri();
+
+        if (!$this->isAllowed($route)) {
+            $this->app->hook('slim.before.dispatch', array($this, 'checkRequest'));
+        }
 
         $this->next->call();
     }
@@ -50,7 +64,7 @@ class Hmac extends \Slim\Middleware
     {
         $app = $this->app;
 
-        $authHeader = $app->request->headers()->get('authentication');
+        $authHeader = $app->request->headers()->get($this->options['header']['authentication']);
 
         if (strpos(strtoupper($authHeader), 'HMAC ') !== 0) {
             throw new HttpForbiddenException();
@@ -90,5 +104,21 @@ class Hmac extends \Slim\Middleware
                 }
             }
         }
+    }
+
+    private function isAllowed($route)
+    {
+        $allowed = false;
+
+        foreach ($this->options['allowedRoutes'] as $allowedRoute) {
+            $pattern = '|^' . str_replace('*', '.+', $allowedRoute) . '$|';
+
+            if (preg_match($pattern, $route)) {
+                $allowed = true;
+                break;
+            }
+        }
+
+        return $allowed;
     }
 }
