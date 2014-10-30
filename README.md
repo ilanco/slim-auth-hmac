@@ -1,10 +1,9 @@
 Slim HMAC Authentication Middleware
 ===================================
 
-What is it?
------------
+***Slim HMAC Authentication Middleware*** is a Slim middleware library that authenticates requests with HMAC.
 
-A Slim middleware library that authenticates the request with HMAC.
+[![Build Status](https://travis-ci.org/ilanco/slim-auth-hmac.svg?branch=master)](https://travis-ci.org/ilanco/slim-auth-hmac)
 
 Requirements
 ------------
