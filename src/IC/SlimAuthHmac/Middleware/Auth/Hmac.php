@@ -79,7 +79,7 @@ class Hmac extends \Slim\Middleware
                 list($publicKey, $hmacSignature) = explode(':', $authKeySig);
 
                 $this->hmacManager->setPublicKey($publicKey);
-                $this->hmacManager->setHmacHash($hmacSignature);
+                $this->hmacManager->setHmacSignature($hmacSignature);
 
                 $this->hmacManager->setRequestMethod($app->request->getMethod());
                 $this->hmacManager->setRequestResourceUri($app->request->getResourceUri());

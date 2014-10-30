@@ -49,7 +49,7 @@ class HmacManagerTest extends \PHPUnit_Framework_TestCase
         $hmacManager->setAlgorithm($algorithm);
         $hmacManager->setPublicKey($publicKey);
         $hmacManager->setPrivateKey($privateKey);
-        $hmacManager->setHmacHash($payLoadHmacHash);
+        $hmacManager->setHmacSignature($payLoadHmacHash);
         $hmacManager->setPayload($payload);
         $hmacValue = $hmacManager->generateHmac();
 
@@ -68,7 +68,7 @@ class HmacManagerTest extends \PHPUnit_Framework_TestCase
         $hmacManager->setAlgorithm($algorithm);
         $hmacManager->setPublicKey($publicKey);
         $hmacManager->setPrivateKey($privateKey);
-        $hmacManager->setHmacHash($payLoadHmacHash);
+        $hmacManager->setHmacSignature($payLoadHmacHash);
         $hmacManager->setPayload($payload);
         $hmacValue = $hmacManager->generateHmac();
 

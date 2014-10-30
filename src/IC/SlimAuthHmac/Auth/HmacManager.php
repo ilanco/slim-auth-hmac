@@ -41,7 +41,7 @@ class HmacManager
 
     private $timestamp;
 
-    private $hmacHash;
+    private $hmacSignature;
 
     private $requestMethod;
 
@@ -187,14 +187,14 @@ class HmacManager
         return $this->timestamp;
     }
 
-    public function setHmacHash($hmacHash)
+    public function setHmacSignature($hmacSignature)
     {
-        $this->hmacHash = $hmacHash;
+        $this->hmacSignature = $hmacSignature;
     }
 
-    public function getHmacHash()
+    public function getHmacSignature()
     {
-        return $this->hmacHash;
+        return $this->hmacSignature;
     }
 
     public function setRequestMethod($requestMethod)
