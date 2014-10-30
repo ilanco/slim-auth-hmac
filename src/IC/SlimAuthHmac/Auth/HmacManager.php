@@ -239,9 +239,12 @@ class HmacManager
 
     public function generateHmac()
     {
-        if (empty($this->getAlgorithm())) {
+        $algorithm = $this->getAlgorithm();
+        $privateKey = $this->getPrivateKey();
+
+        if (empty($algorithm)) {
             throw new \RuntimeException('Algorithm must be set and not empty');
-        } elseif (empty($this->getPrivateKey())) {
+        } elseif (empty($privateKey)) {
             throw new \RuntimeException('Private key must be set and not empty');
         }
 
