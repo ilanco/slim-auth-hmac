@@ -14,7 +14,30 @@ Requirements
 Installation
 ------------
 
-Add ilanco/slim-auth-hmac to composer.json and run composer install.
+The only (currently) supported method of installation is via
+[Composer](http://getcomposer.org).
+
+Create a `composer.json` file in the root of your project:
+
+``` json
+{
+    "require": {
+        "ilanco/slim-auth-hmac": "dev-master"
+    }
+}
+```
+
+And then run: `composer install`
+
+Add the autoloader to your project:
+
+``` php
+<?php
+
+require_once 'vendor/autoload.php'
+```
+
+You're now ready to begin using Slim HMAC Authentication Middleware.
 
 Documentation
 -------------
